@@ -22,34 +22,49 @@
     <section class="card">
       <h2>Enlaces rápidos</h2>
       <ul>
-        <li><a href="/api/eventos">GET /api/eventos</a> — Lista de eventos</li>
-        <li><a href="/api/inscripciones/evento/TEST">GET /api/inscripciones/evento/{eventoId}</a></li>
+        <li><a href="/api/lugares">GET /api/lugares</a> – Lista de lugares</li>
+        <li><a href="/api/personas">GET /api/personas</a> – Lista de personas</li>
+        <li><a href="/api/eventos">GET /api/eventos</a> – Lista de eventos</li>
       </ul>
     </section>
 
     <section class="card">
       <h2>Ejemplos cURL</h2>
-      <p><strong>Crear evento</strong></p>
-      <pre><code>curl -X POST http://localhost:8080/api/eventos \ 
-  -H "Content-Type: application/json" \ 
+      <p><strong>1) Crear lugar</strong></p>
+      <pre><code>curl -X POST http://localhost:8080/api/lugares \
+  -H "Content-Type: application/json" \
   -d '{
-    "titulo": "Kickoff",
-    "fecha": "2025-10-01",
-    "duracionMin": 90,
     "direccion": "Cra 1 #23-45",
-    "ciudad": "Bogotá",
-    "pais": "CO"
+    "ciudad": "Bogotá"
   }'</code></pre>
 
-      <p><strong>Listar eventos</strong></p>
+      <p><strong>2) Crear persona</strong></p>
+      <pre><code>curl -X POST http://localhost:8080/api/personas \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Alex",
+    "fechaNac": "1990-05-20"
+  }'</code></pre>
+
+      <p><strong>3) Crear evento</strong></p>
+      <pre><code>curl -X POST http://localhost:8080/api/eventos \
+  -H "Content-Type: application/json" \
+  -d '{
+    "titulo": "Kickoff",
+    "descripcion": "Reunión inicial",
+    "inicio": "2025-10-01T09:00:00",
+    "fin": "2025-10-01T10:30:00",
+    "lugarId": 1
+  }'</code></pre>
+
+      <p><strong>4) Listar eventos</strong></p>
       <pre><code>curl http://localhost:8080/api/eventos</code></pre>
 
-      <p><strong>Inscribir persona</strong></p>
-      <pre><code>curl -X POST http://localhost:8080/api/inscripciones \ 
-  -H "Content-Type: application/json" \ 
+      <p><strong>5) Inscribir persona en evento</strong></p>
+      <pre><code>curl -X POST http://localhost:8080/api/eventos/1/participantes \
+  -H "Content-Type: application/json" \
   -d '{
-    "personaId": "P1",
-    "eventoId": "&lt;ID_DEL_EVENTO&gt;"
+    "personaId": 1
   }'</code></pre>
     </section>
 
@@ -58,4 +73,3 @@
     </footer>
   </body>
   </html>
-
