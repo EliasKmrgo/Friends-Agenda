@@ -4,17 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Evento {
-    private String id;
+    private Long id;
     private String titulo;
-    private LocalDate fecha;
-    private Duration duracion;
-    private Lugar lugar;
+    private String descripcion;
+    private LocalDateTime inicio;
+    private LocalDateTime fin;
+    private Long lugarId;
 }
-

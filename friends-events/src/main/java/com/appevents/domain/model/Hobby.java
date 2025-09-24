@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Hobby {
-    private String id;
+    private Long id;
     private String nombre;
+    private String descripcion;
 }
-
