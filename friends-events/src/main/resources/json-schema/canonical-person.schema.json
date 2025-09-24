@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friends-agenda.example.com/schemas/canonical-person.schema.json",
+  "title": "Canonical Person",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "canonicalId",
+    "schemaVersion",
+    "name",
+    "emails"
+  ],
+  "properties": {
+    "canonicalId": {
+      "type": "string",
+      "pattern": "[a-f0-9]{64}$",
+      "description": "Canonical SHA-256 hex identifier (64 chars)."
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "object",
+      "required": ["full"],
+      "properties": {
+        "full": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "emails": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["value"],
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "city": { "type": ["string", "null"], "minLength": 1 },
+        "country": { "type": ["string", "null"], "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "sourceMeta": {
+      "type": "object",
+      "description": "Source metadata (opaque map)."
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
+

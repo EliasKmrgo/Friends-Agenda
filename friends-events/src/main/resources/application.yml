@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: friends-agenda
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://admin:admin123@localhost:27017/friends_agenda?authSource=admin}
+
+app:
+  data:
+    schemaVersion: 1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
