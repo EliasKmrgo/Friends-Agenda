@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Friends Events API</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif; margin: 2rem; line-height: 1.5; }
+      code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      header { margin-bottom: 1rem; }
+      .card { border: 1px solid #8884; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
+      a { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Friends Events API</h1>
+      <p>Servicio en ejecución. Usa los endpoints REST o prueba con los enlaces rápidos.</p>
+    </header>
+
+    <section class="card">
+      <h2>Enlaces rápidos</h2>
+      <ul>
+        <li><a href="/api/eventos">GET /api/eventos</a> — Lista de eventos</li>
+        <li><a href="/api/inscripciones/evento/TEST">GET /api/inscripciones/evento/{eventoId}</a></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Ejemplos cURL</h2>
+      <p><strong>Crear evento</strong></p>
+      <pre><code>curl -X POST http://localhost:8080/api/eventos \ 
+  -H "Content-Type: application/json" \ 
+  -d '{
+    "titulo": "Kickoff",
+    "fecha": "2025-10-01",
+    "duracionMin": 90,
+    "direccion": "Cra 1 #23-45",
+    "ciudad": "Bogotá",
+    "pais": "CO"
+  }'</code></pre>
+
+      <p><strong>Listar eventos</strong></p>
+      <pre><code>curl http://localhost:8080/api/eventos</code></pre>
+
+      <p><strong>Inscribir persona</strong></p>
+      <pre><code>curl -X POST http://localhost:8080/api/inscripciones \ 
+  -H "Content-Type: application/json" \ 
+  -d '{
+    "personaId": "P1",
+    "eventoId": "&lt;ID_DEL_EVENTO&gt;"
+  }'</code></pre>
+    </section>
+
+    <footer>
+      <small>Spring Boot sirve automáticamente este archivo desde <code>src/main/resources/static/index.html</code>.</small>
+    </footer>
+  </body>
+  </html>
+

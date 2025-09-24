@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AppEventsApplication<friends-events>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.appevents.AppEventsApplication",
+            "projectName": "friends-events",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
