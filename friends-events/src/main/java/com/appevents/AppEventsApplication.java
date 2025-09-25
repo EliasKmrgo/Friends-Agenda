@@ -2,19 +2,15 @@ package com.appevents;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-/**
- * Arranque de la aplicación.
- * Se amplía el escaneo de componentes y repositorios para incluir com.friendsagenda.*
- */
-@SpringBootApplication(
-    scanBasePackages = {
-        "com.appevents",          // tu app actual
-        "com.friendsagenda"       // documentos, servicios, controladores y repos
-    }
-)
-@EnableMongoRepositories(basePackages = "com.friendsagenda.repository")
+@SpringBootApplication(scanBasePackages = {"com.friendsagenda", "com.appevents"})
+@EnableMongoRepositories(basePackages = "com.friendsagenda.mongo.repository")
+@EnableJpaRepositories(basePackages = "com.friendsagenda.sql.repository")
+@EntityScan(basePackages = "com.friendsagenda.sql.entity")   // 👈 Agregar esto
+
 public class AppEventsApplication {
     public static void main(String[] args) {
         SpringApplication.run(AppEventsApplication.class, args);

@@ -1,4 +1,4 @@
-package com.friendsagenda.document;
+package com.friendsagenda.mongo.document;
 
 import java.time.Instant;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * name, emails, optional location, source metadata and the last update
  * timestamp.
  */
-@Document("persons")
+@Document(collection = "persons")
 public class PersonDoc {
 
     /** MongoDB document identifier. */

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.friendsagenda.api.dto.RawPersonDTO;
-import com.friendsagenda.document.PersonDoc;
+import com.friendsagenda.mongo.document.PersonDoc;
 import com.friendsagenda.service.IngestService;
 
 /**

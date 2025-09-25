@@ -9,11 +9,11 @@ import java.util.Optional;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import com.friendsagenda.document.PersonDoc;
-import com.friendsagenda.document.PersonDoc.Email;
-import com.friendsagenda.document.PersonDoc.Location;
-import com.friendsagenda.document.PersonDoc.Name;
-import com.friendsagenda.repository.PersonRepository;
+import com.friendsagenda.mongo.document.PersonDoc;
+import com.friendsagenda.mongo.document.PersonDoc.Email;
+import com.friendsagenda.mongo.document.PersonDoc.Location;
+import com.friendsagenda.mongo.document.PersonDoc.Name;
+import com.friendsagenda.mongo.repository.PersonRepositoryMongo;
 import com.friendsagenda.util.CanonicalId;
 import com.friendsagenda.validation.JsonSchemaValidator;
 
@@ -27,7 +27,7 @@ import com.friendsagenda.validation.JsonSchemaValidator;
 public class IngestService {
 
     private final MongoTemplate mongoTemplate;
-    private final PersonRepository personRepository;
+    private final PersonRepositoryMongo personRepository;
     private final JsonSchemaValidator validator;
 
     /**
@@ -39,7 +39,7 @@ public class IngestService {
      */
     public IngestService(
             MongoTemplate mongoTemplate,
-            PersonRepository personRepository,
+            PersonRepositoryMongo personRepository,
             JsonSchemaValidator validator) {
         this.mongoTemplate = mongoTemplate;
         this.personRepository = personRepository;

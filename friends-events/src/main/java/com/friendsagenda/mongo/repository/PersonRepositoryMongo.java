@@ -1,17 +1,18 @@
-package com.friendsagenda.repository;
+package com.friendsagenda.mongo.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.friendsagenda.document.PersonDoc;
+import com.friendsagenda.mongo.document.PersonDoc;
 
 /**
  * Spring Data MongoDB repository for {@link PersonDoc}.
  * <p>
  * Provides basic CRUD operations and a finder by canonical identifier.
  */
-public interface PersonRepository extends MongoRepository<PersonDoc, String> {
+
+public interface PersonRepositoryMongo extends MongoRepository<PersonDoc, String> {
 
     /**
      * Finds a person document by its canonical identifier.
