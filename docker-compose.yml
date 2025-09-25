@@ -1,0 +1,57 @@
+# ------------------------------------------------------------
+# Configuración de Docker Compose para MongoDB y Mongo Express
+#
+# Objetivo:
+# - Levantar MongoDB (con base de datos inicial friends_agenda)
+# - Ejecutar scripts de inicialización (colecciones, índices y semillas)
+# - Exponer Mongo Express en http://localhost:8081 con autenticación básica
+#
+# Notas:
+# - Las credenciales se leen desde el archivo .env en la raíz.
+# - Los scripts en ./docker/mongo/init/ se ejecutan sólo la primera vez
+#   (cuando el volumen de datos está vacío). Usa `make reseed` para reiniciar.
+# - Se define la red bridge `fa_net` y el volumen `mongo_data` persistente.
+# ------------------------------------------------------------
+
+version: "3.9"
+
+services: 
+  mongo:
+    image: mongo:7
+    container_name: fa_mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASS}
+      - MONGO_INITDB_DATABASE=friends_agenda
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./docker/mongo/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - fa_net
+
+  mongo-express:
+    image: mongo-express:1.0.2
+    container_name: fa_mongo_express
+    ports:
+      - "8081:8081"
+    environment:
+      # URL de conexión a MongoDB usando el usuario root. Se especifica
+      # authSource=admin porque el usuario root se crea en la base admin.
+      - ME_CONFIG_MONGODB_URL=mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASS}@mongo:27017/?authSource=admin
+      # Credenciales de autenticación básica para el panel de Mongo Express
+      - ME_CONFIG_BASICAUTH_USERNAME=${ME_USER}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${ME_PASS}
+    depends_on:
+      - mongo
+    networks:
+      - fa_net
+
+volumes:
+  mongo_data:
+
+networks:
+  fa_net:
+    driver: bridge
+
