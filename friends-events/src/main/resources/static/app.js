@@ -1,9 +1,9 @@
 const API = {
-  people: (q, source) => `/api/people?source=${source||'all'}&q=${encodeURIComponent(q||'')}`,
+  people: (q, source) => `/api/personas?source=${source || 'all'}&q=${encodeURIComponent(q || '')}`,
   graph: (type) => `/api/graph?type=${type||'people'}`,
   person: (id) => `/api/person/${id}`,
   upsert: `/api/person`
-}
+};
 
 let cy=null, currentSource='all', selectedNode=null, searchTimer=null, creating=false;
 
@@ -20,7 +20,7 @@ function initGraph(){
       { selector:'node', style:{ 'label':'data(label)', 'background-color':'#a3bffa', 'text-valign':'center','text-halign':'center','width':'label','height':'label','padding':'10px'}},
       { selector:'edge', style:{ 'width':2, 'line-color':'#c7d2fe', 'target-arrow-shape':'triangle','target-arrow-color':'#c7d2fe'}}
     ],
-    layout:{ name:'cose' }
+    layout:{ nombre:'cose' }
   });
   cy.on('tap','node',evt=>{
     const id=evt.target.data('id'); selectPerson(id);
@@ -33,7 +33,7 @@ async function loadGraph(){
     const data=await res.json(), elements=[];
     (data.nodes||[]).forEach(n=>elements.push({data:{id:n.id,label:n.label,props:n.props}}));
     (data.edges||[]).forEach(e=>elements.push({data:{id:e.id||`${e.source}-${e.target}`,source:e.source,target:e.target,label:e.label}}));
-    cy.elements().remove(); cy.add(elements); cy.layout({name:'cose'}).run();
+    cy.elements().remove(); cy.add(elements); cy.layout({nombre:'cose'}).run();
   }catch(err){ console.error(err) }
 }
 
@@ -53,13 +53,13 @@ function renderPeopleList(people){
     const div=document.createElement('div'); div.className='list-item'; div.dataset.id=p.id;
     div.innerHTML=`
       <div class="meta">
-        <div class="avatar">${(p.name||'?').charAt(0).toUpperCase()}</div>
+        <div class="avatar">${(p.nombre||'?').charAt(0).toUpperCase()}</div>
         <div>
-          <div style="font-weight:600">${escapeHtml(p.name||'Sin nombre')}</div>
+          <div style="font-weight:600">${escapeHtml(p.nombre||'Sin nombre')}</div>
           <div class="expandable">${escapeHtml(p.dob||'')}</div>
         </div>
       </div>
-      <div><button onclick="selectPerson('${p.id}')">Ver</button></div>`;
+      `;
     c.appendChild(div);
   });
 }
@@ -74,17 +74,17 @@ async function selectPerson(id){
 
 function showDetails(p,isNew){
   selectedNode=p; creating=isNew;
-  document.getElementById('detailTitle').textContent=isNew?'Nueva persona':(p.name||'Detalle');
+  document.getElementById('detailTitle').textContent=isNew?'Nueva persona':(p.nombre||'Detalle');
   document.getElementById('detailForm').style.display='block';
   document.getElementById('btnBack').style.display=isNew?'inline-block':'none';
   document.getElementById('fieldId').value=p.id||'';
-  document.getElementById('fieldName').value=p.name||'';
-  document.getElementById('fieldDob').value=p.dob||'';
+  document.getElementById('fieldName').value=p.nombre||'';
+  document.getElementById('fieldDob').value=p.fechaNac||'';
 }
 
 async function savePerson(){
   const id=document.getElementById('fieldId').value||null;
-  const payload={id:id||undefined,name:fieldName.value,dob:fieldDob.value,source:currentSource};
+  const payload={id:id||undefined,nombre:fieldName.value,fechaNac:fieldDob.value,source:currentSource};
   try{
     const res=await fetch(API.upsert,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     if(!res.ok) throw new Error(await res.text());
@@ -102,7 +102,7 @@ async function deletePerson(){
 }
 
 function openCreateModal(){
-  showDetails({id:'',name:'',dob:''}, true);
+  showDetails({id:'',nombre:'',fechaNac:''}, true);
 }
 function closeCreateModal(){
   document.getElementById('detailForm').style.display='none';
