@@ -1,75 +1,75 @@
 <!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Friends Events API</title>
-    <style>
-      :root { color-scheme: light dark; }
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif; margin: 2rem; line-height: 1.5; }
-      code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-      header { margin-bottom: 1rem; }
-      .card { border: 1px solid #8884; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
-      a { text-decoration: none; }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>Friends Events API</h1>
-      <p>Servicio en ejecución. Usa los endpoints REST o prueba con los enlaces rápidos.</p>
-    </header>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agenda de Contactos — Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
 
-    <section class="card">
-      <h2>Enlaces rápidos</h2>
-      <ul>
-        <li><a href="/api/lugares">GET /api/lugares</a> – Lista de lugares</li>
-        <li><a href="/api/personas">GET /api/personas</a> – Lista de personas</li>
-        <li><a href="/api/eventos">GET /api/eventos</a> – Lista de eventos</li>
-      </ul>
-    </section>
+    <!-- IZQUIERDA -->
+    <aside class="panel">
+      <div class="header">
+        <div style="font-weight:700">Agenda de contactos</div>
+        <button id="btnAdd" class="btn" title="Agregar persona">+</button>
+      </div>
+      <div style="margin-top:10px; display:flex; gap:8px; align-items:center">
+        <div class="search">
+          <input id="searchInput" placeholder="Buscar..." oninput="debouncedSearch()" />
+        </div>
+        <button class="btn" id="loadButton" onchange="loadPeople()">Buscar</button>
+      </div>
+      <div id="peopleList" style="margin-top:12px"></div>
+    </aside>
 
-    <section class="card">
-      <h2>Ejemplos cURL</h2>
-      <p><strong>1) Crear lugar</strong></p>
-      <pre><code>curl -X POST http://localhost:8080/api/lugares \
-  -H "Content-Type: application/json" \
-  -d '{
-    "direccion": "Cra 1 #23-45",
-    "ciudad": "Bogotá"
-  }'</code></pre>
+    <!-- CENTRO -->
+    <main id="graphPanel">
+      <div class="tabs">
+        <div class="tab active" data-tab="graph" onclick="switchTab(event)">Personas</div>
+        <div class="tab" data-tab="events" onclick="switchTab(event)">Eventos</div>
+        <div class="tab" data-tab="hobbies" onclick="switchTab(event)">Hobbies</div>
+      </div>
+      <div id="cy"></div>
+      <div style="margin-top:8px; display:flex; gap:8px; align-items:center">
+        <button class="btn" onclick="refreshAll()">Actualizar</button>
+        <div style="color:var(--muted); font-size:13px">Haga clic en un nodo para ver detalles</div>
+      </div>
+    </main>
 
-      <p><strong>2) Crear persona</strong></p>
-      <pre><code>curl -X POST http://localhost:8080/api/personas \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "Alex",
-    "fechaNac": "1990-05-20"
-  }'</code></pre>
+    <!-- DERECHA -->
+    <aside class="details">
+      <h3 id="detailTitle">Selecciona un nodo</h3>
+      <div id="detailForm" style="display:none">
+        <div class="field">
+          <label>Id</label>
+          <input id="fieldId" />
+        </div>
+        <div class="field">
+          <label>Nombre</label>
+          <input id="fieldName" />
+        </div>
+        <div class="field">
+          <label>Correo</label>
+          <input id="fieldEmail" />
+        </div>
+        <div class="field">
+          <label>Notas</label>
+          <textarea id="fieldNotes" rows="3"></textarea>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="savePerson()">Guardar</button>
+          <button onclick="deletePerson()">Eliminar</button>
+        </div>
+        <button id="btnBack" class="back-btn" style="display:none; margin-top:8px" onclick="closeCreateModal()">← Volver</button>
+      </div>
+    </aside>
 
-      <p><strong>3) Crear evento</strong></p>
-      <pre><code>curl -X POST http://localhost:8080/api/eventos \
-  -H "Content-Type: application/json" \
-  -d '{
-    "titulo": "Kickoff",
-    "descripcion": "Reunión inicial",
-    "inicio": "2025-10-01T09:00:00",
-    "fin": "2025-10-01T10:30:00",
-    "lugarId": 1
-  }'</code></pre>
+  </div>
 
-      <p><strong>4) Listar eventos</strong></p>
-      <pre><code>curl http://localhost:8080/api/eventos</code></pre>
-
-      <p><strong>5) Inscribir persona en evento</strong></p>
-      <pre><code>curl -X POST http://localhost:8080/api/eventos/1/participantes \
-  -H "Content-Type: application/json" \
-  -d '{
-    "personaId": 1
-  }'</code></pre>
-    </section>
-
-    <footer>
-      <small>Spring Boot sirve automáticamente este archivo desde <code>src/main/resources/static/index.html</code>.</small>
-    </footer>
-  </body>
-  </html>
+  <script src="https://unpkg.com/cytoscape@3.23.0/dist/cytoscape.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
