@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication(scanBasePackages = {"com.friendsagenda", "com.appevents"})
 @EnableMongoRepositories(basePackages = "com.friendsagenda.mongo.repository")
 @EnableJpaRepositories(basePackages = "com.friendsagenda.sql.repository")
-@EntityScan(basePackages = "com.friendsagenda.sql.entity")   // 👈 Agregar esto
+@EntityScan(basePackages = "com.friendsagenda.sql.entity") 
 
 public class AppEventsApplication {
     public static void main(String[] args) {
