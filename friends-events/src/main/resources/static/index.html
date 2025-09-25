@@ -20,7 +20,7 @@
         <div class="search">
           <input id="searchInput" placeholder="Buscar..." oninput="debouncedSearch()" />
         </div>
-        <button class="btn" id="loadButton" onchange="loadPeople()">Buscar</button>
+        <button class="btn" id="loadButton" onchange="loadPeople()"> Buscar </button>
       </div>
       <div id="peopleList" style="margin-top:12px"></div>
     </aside>
@@ -45,19 +45,15 @@
       <div id="detailForm" style="display:none">
         <div class="field">
           <label>Id</label>
-          <input id="fieldId" />
+          <input id="fieldId" readonly />
         </div>
         <div class="field">
           <label>Nombre</label>
           <input id="fieldName" />
         </div>
         <div class="field">
-          <label>Correo</label>
-          <input id="fieldEmail" />
-        </div>
-        <div class="field">
-          <label>Notas</label>
-          <textarea id="fieldNotes" rows="3"></textarea>
+          <label>Fecha de nacimiento</label>
+          <input type="date" id="fieldDob" />
         </div>
         <div class="actions">
           <button class="btn" onclick="savePerson()">Guardar</button>
