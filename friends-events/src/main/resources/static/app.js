@@ -1,5 +1,5 @@
 const API = {
-  people: (q, source) => `/api/people?source=${source||'all'}&q=${encodeURIComponent(q||'')}`,
+  people: (q, source) => `/api/personas?source=${source || 'all'}&q=${encodeURIComponent(q || '')}`,
   graph: (type) => `/api/graph?type=${type||'people'}`,
   person: (id) => `/api/person/${id}`,
   upsert: `/api/person`
