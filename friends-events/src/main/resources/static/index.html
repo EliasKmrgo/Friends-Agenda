@@ -1,71 +1,62 @@
-<!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agenda de Contactos — Dashboard</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda de Contactos</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <div class="app">
+<body class="bg-gray-50 p-4 h-screen overflow-hidden">
+  <div class="grid grid-cols-12 gap-4 h-full">
+    
+    <!-- Lista de Personas -->
+    <div class="col-span-3 bg-white p-4 rounded-2xl shadow flex flex-col overflow-hidden">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold">Agenda de contactos</h2>
+        <button id="btnAgregar" class="bg-blue-500 hover:bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center">+</button>
+      </div>
+      <input id="inputBuscar" type="text" placeholder="Buscar..." class="border rounded p-2 mb-2">
+      <button id="btnBuscar" class="bg-blue-500 hover:bg-blue-600 text-white rounded p-2 mb-4">Buscar</button>
+      <ul id="listaPersonas" class="space-y-2 overflow-y-auto flex-1"></ul>
+    </div>
 
-    <!-- IZQUIERDA -->
-    <aside class="panel">
-      <div class="header">
-        <div style="font-weight:700">Agenda de contactos</div>
-        <button id="btnAdd" class="btn" title="Agregar persona">+</button>
+    <!-- Grafo -->
+    <div class="col-span-6 bg-white p-4 rounded-2xl shadow flex flex-col overflow-hidden">
+      <div class="flex space-x-2 mb-2">
+        <button id="btnVerPersonas" class="px-3 py-1 bg-blue-100 rounded-lg">Personas</button>
+        <button id="btnVerEventos" class="px-3 py-1 bg-blue-100 rounded-lg">Eventos</button>
+        <button id="btnVerHobbies" class="px-3 py-1 bg-blue-100 rounded-lg">Hobbies</button>
       </div>
-      <div style="margin-top:10px; display:flex; gap:8px; align-items:center">
-        <div class="search">
-          <input id="searchInput" placeholder="Buscar..." oninput="debouncedSearch()" />
-        </div>
-        <button class="btn" id="loadButton" onchange="loadPeople()"> Buscar </button>
-      </div>
-      <div id="peopleList" style="margin-top:12px"></div>
-    </aside>
+      <svg id="grafo" class="flex-1 border rounded w-full h-full"></svg>
+      <button id="btnActualizar" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white rounded p-2">Actualizar</button>
+    </div>
 
-    <!-- CENTRO -->
-    <main id="graphPanel">
-      <div class="tabs">
-        <div class="tab active" data-tab="graph" onclick="switchTab(event)">Personas</div>
-        <div class="tab" data-tab="events" onclick="switchTab(event)">Eventos</div>
-        <div class="tab" data-tab="hobbies" onclick="switchTab(event)">Hobbies</div>
-      </div>
-      <div id="cy"></div>
-      <div style="margin-top:8px; display:flex; gap:8px; align-items:center">
-        <button class="btn" onclick="refreshAll()">Actualizar</button>
-        <div style="color:var(--muted); font-size:13px">Haga clic en un nodo para ver detalles</div>
-      </div>
-    </main>
+    <!-- Detalles / Formulario -->
+    <div id="detallePersona" class="col-span-3 bg-white p-4 rounded-2xl shadow flex flex-col overflow-hidden">
+      <h3 class="text-lg font-bold mb-2">Detalles de Persona</h3>
+      <div id="detalleContenido" class="space-y-2 text-sm overflow-y-auto flex-1"></div>
+      <button id="btnEliminar" class="mt-4 bg-red-500 hover:bg-red-600 text-white rounded p-2 hidden">Eliminar</button>
+    </div>
 
-    <!-- DERECHA -->
-    <aside class="details">
-      <h3 id="detailTitle">Selecciona un nodo</h3>
-      <div id="detailForm" style="display:none">
-        <div class="field">
-          <label>Id</label>
-          <input id="fieldId" readonly />
+    <!-- Modal Crear Persona -->
+    <div id="modalCrear" class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
+      <div class="bg-white rounded-2xl shadow p-6 w-96 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg font-bold mb-4">Crear Persona</h3>
+        <input id="inputNombre" type="text" placeholder="Nombre" class="border rounded p-2 w-full mb-2">
+        <input id="inputFecha" type="date" class="border rounded p-2 w-full mb-2">
+        <input id="inputHobbies" type="text" placeholder="Hobbies separados por coma" class="border rounded p-2 w-full mb-2">
+        <input id="inputEventos" type="text" placeholder="Eventos separados por coma" class="border rounded p-2 w-full mb-2">
+        <label class="text-sm font-bold">Relacionar con:</label>
+        <select id="selectRelacion" class="border rounded p-2 w-full mb-4" multiple></select>
+        <div class="flex justify-end space-x-2">
+          <button id="btnCancelar" class="bg-gray-300 hover:bg-gray-400 rounded p-2">Cancelar</button>
+          <button id="btnGuardar" class="bg-blue-500 hover:bg-blue-600 text-white rounded p-2">Guardar</button>
         </div>
-        <div class="field">
-          <label>Nombre</label>
-          <input id="fieldName" />
-        </div>
-        <div class="field">
-          <label>Fecha de nacimiento</label>
-          <input type="date" id="fieldDob" />
-        </div>
-        <div class="actions">
-          <button class="btn" onclick="savePerson()">Guardar</button>
-          <button onclick="deletePerson()">Eliminar</button>
-        </div>
-        <button id="btnBack" class="back-btn" style="display:none; margin-top:8px" onclick="closeCreateModal()">← Volver</button>
       </div>
-    </aside>
+    </div>
 
   </div>
-
-  <script src="https://unpkg.com/cytoscape@3.23.0/dist/cytoscape.min.js"></script>
-  <script src="app.js"></script>
 </body>
+<script src="app.js"></script>
 </html>
